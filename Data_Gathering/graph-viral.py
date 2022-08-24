@@ -2,7 +2,6 @@
 #called spotipy, you can install it with this command:
 #pip install spotipy --upgrade
 #link github for the library: https://github.com/plamere/spotipy
-#che otteniamo creando una app dal nostro profilo nell'area sviluppatori
 
 from traceback import print_tb
 import networkx as nx
@@ -12,12 +11,10 @@ from spotipy.oauth2 import SpotifyClientCredentials
 
 #----START----API-SPOTIFY----START----
 
-#In order to work with the Spotify API we need two codes (client_id, client_secret)
-#we can obtain this codes by creating an application from our spotify
-#profile in the developer area
+
 spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(client_id="",client_secret=""))
 
-#I read the file called global.csv that contains the name of the country(in italian) 
+#global.csv contains the name of the country(in italian),
 #the link for the Global country playlist on Spotify and the latitute and longitude of the capital city
 #the latitude and longitude are useful for the graph visualization in gephi
 countries = list()
@@ -26,7 +23,7 @@ with open('viral.csv', 'r') as file:
     for row in reader:
         countries.append(row)
 
-#This is my dataset, at avery index i have a list of ISRC (50 per playlist except for some less populated countries)
+#contains list of ISRC (50 per playlist except for some less populated countries)
 dataset = list()
 
 #I take the link of the playlist from countries
@@ -34,23 +31,23 @@ dataset = list()
 #from the id i will extract for each song its uri
 for country in countries:
 
-    playlist = spotify.playlist(country["Link"])
-    songs = spotify.playlist_items(playlist["id"]) 
+    id_playlist = spotify.playlist(country["Link"])["id"]
+    songs = spotify.playlist_items(id_playlist)["items"]
 
-    #aux is a auxiliary set where i put the ISRC from a single playlist
+    #contains URI from a single playlist
     aux = set()
 
-    for i in range (len(songs["items"])):
-        aux.add(songs["items"][i]["track"]["uri"])
+    for i in range (len(songs)):
+        aux.add(songs[i]["track"]["uri"])
     
     dataset.append(aux)
 
 #----END----API-SPOTIFY----END----
 
-#The lenght of n is the same of our dataset so the same of the number of countries
+
 n = len(dataset)
 
-#centrality contains how many songs a country have in common with the top 50 virl 
+#centrality contains how many songs a country have in common with the top 50 viral 
 #this is called global-centrality (i created it)
 centrality = {}
 for x in range (1,n) : 
@@ -67,8 +64,7 @@ with open('viral-centrality.csv', 'w+', newline='', encoding='utf-16') as file:
     for i in range (len(centrality)) :
         writer.writerow(centrality[i])
 
-#This is the graph with the affinity of the countries
-#so the songs they have in common
+#This is the graph with the affinity(the songs they have in common) of the countries
 #TODO: Use a decente color for the graph visualization also for colorblind
 grafo = nx.Graph()
 
