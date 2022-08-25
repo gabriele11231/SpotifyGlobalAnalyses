@@ -22,7 +22,7 @@ with open('viral.csv', 'r') as file:
     for row in reader:
         countries.append(row)
 
-#This is my dataset, at avery index i have a list of ISRC (50 per playlist except for some less populated countries)
+#contains list of ISRC (50 per playlist except for some less populated countries)
 dataset = list()
 
 
