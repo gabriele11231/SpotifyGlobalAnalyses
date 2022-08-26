@@ -1,6 +1,6 @@
-from traceback import print_tb
 import networkx as nx
 import numpy as np
+import pandas as pd
 
 #----DEGREE-ANALYSES-VIRAL----
 viral_dict = dict()
@@ -11,12 +11,11 @@ min_country_l = list()
 min_degree_l = list()
 for z in range(1, 16):
 
-    grafo = nx.read_gpickle(f'Dataset\\viral-pkl\\viral{z}.pkl')
+    grafo = pd.read_pickle(f'Dataset\\viral-pkl\\viral{z}.pkl')
 
     degree = dict(grafo.degree(weight='weight'))
     campione_grado = list(degree.values())
     mean_degree_l.append(np.mean(list(degree.values())))
-
 
     max_degree = max(degree.values())
     max_country = ''
@@ -53,7 +52,7 @@ min_country_l = list()
 min_degree_l = list()
 for z in range(1, 16):
 
-    grafo = nx.read_gpickle(f'Dataset\\global-pkl\\global{z}.pkl')
+    grafo = pd.read_pickle(f'Dataset\\global-pkl\\global{z}.pkl')
 
     degree = dict(grafo.degree(weight='weight'))
     campione_grado = list(degree.values())
