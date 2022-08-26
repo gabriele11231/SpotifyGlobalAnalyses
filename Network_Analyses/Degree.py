@@ -1,6 +1,7 @@
 import networkx as nx
 import numpy as np
 import pandas as pd
+from pathlib import Path, PureWindowsPath
 
 #----DEGREE-ANALYSES-VIRAL----
 viral_dict = dict()
@@ -11,7 +12,8 @@ min_country_l = list()
 min_degree_l = list()
 for z in range(1, 16):
 
-    grafo = pd.read_pickle(f'Dataset\\viral-pkl\\viral{z}.pkl')
+    data_path = f'Dataset\\viral-pkl\\viral{z}.pkl'
+    grafo = pd.read_pickle(Path(data_path))
 
     degree = dict(grafo.degree(weight='weight'))
     campione_grado = list(degree.values())
@@ -52,7 +54,8 @@ min_country_l = list()
 min_degree_l = list()
 for z in range(1, 16):
 
-    grafo = pd.read_pickle(f'Dataset\\global-pkl\\global{z}.pkl')
+    data_path = f'Dataset\\global-pkl\\global{z}.pkl'
+    grafo = pd.read_pickle(Path(data_path))
 
     degree = dict(grafo.degree(weight='weight'))
     campione_grado = list(degree.values())
