@@ -1,11 +1,11 @@
-from cProfile import label
 import networkx as nx
 import numpy as np
 import pandas as pd
-from pathlib import Path, PureWindowsPath
+from pathlib import Path
 import plotly.graph_objects as go
 import plotly.express as px
 import pathlib
+from Geographic_zone import fast_geographic_zone
 
 #In order to use plotly you have to install it with the command pip install plotly
 
@@ -186,6 +186,9 @@ fig_global.update_traces(line_color='#252852', line_width=5)
 
 fig_global.show()
 
+
+
+
 fig_viral = go.Figure()
 df_viral  = pd.DataFrame.from_dict(viral_dict)
 
@@ -277,3 +280,231 @@ fig_viral.update_yaxes(
 fig_viral.update_traces(line_color='#252852', line_width=5)
 
 fig_viral.show()
+
+
+
+#by continents
+fast = fast_geographic_zone()
+fig_global_zone = go.Figure()
+
+for i in range(len(df)):
+    df.at[i,'max_country'] = fast.find_zone(df.at[i,'max_country'])
+    df.at[i,'min_country'] = fast.find_zone(df.at[i,'min_country'])
+
+color_max = []
+color_min = []
+for i in range(len(df['max_country'])):
+    if not color_max.__contains__(fast.color_zone(df.at[i,'max_country'])):
+        color_max.append(fast.color_zone(df.at[i,'max_country']))
+    if not color_min.__contains__(fast.color_zone(df.at[i,'min_country'])):
+        color_min.append(fast.color_zone(df.at[i,'min_country']))
+
+fig_s_max = px.scatter(
+    df,
+    x=[i+1 for i in range(15)],
+    y="max_degree",
+    color= "max_country",
+    color_discrete_sequence = color_max,
+)
+
+fig_l_max = (px.line(
+        df,
+        x=[i+1 for i in range(15)],
+        y="max_degree"
+    )
+)
+
+fig_s_min = px.scatter(
+    df,
+    x=[i+1 for i in range(15)],
+    y="min_degree",
+    color= "min_country",
+    color_discrete_sequence = color_min
+)
+
+fig_l_min = (px.line(
+        df,
+        x=[i+1 for i in range(15)],
+        y="min_degree"
+    )
+)
+
+
+
+fig_s_mean = px.scatter(
+    df,
+    x=[i+1 for i in range(15)],
+    y="mean_degree",
+    color_discrete_sequence=['#1fa5c0']
+)
+
+fig_s_mean.update_traces(
+    selector=dict(mode='markers'),
+)    
+
+fig_l_mean = (px.line(
+        df,
+        x=[i+1 for i in range(15)],
+        y="mean_degree",
+    )
+)
+
+fig_s_mean['data'][0]['showlegend']=True
+fig_s_mean['data'][0]['name']='Mean'
+
+fig_global_zone = go.Figure(data = fig_l_min.data + fig_s_min.data  + fig_l_max.data + fig_s_max.data + fig_l_mean.data + fig_s_mean.data)
+
+fig_global_zone.update_layout(
+    xaxis_title = 'Days',
+    title_font_family="Times New Roman",
+    plot_bgcolor = 'white'
+)
+
+fig_global_zone.update_traces(
+    marker=dict(
+        size = 13
+    )
+)
+
+
+fig_global_zone.update_xaxes(
+    showgrid=False,
+    dtick = 1,
+)
+
+fig_global_zone.update_yaxes(
+    showgrid=True,
+    dtick = 50,
+    gridwidth=1, 
+    gridcolor= '#e0e0e0',
+    zeroline = True,
+    zerolinecolor = '#e0e0e0',
+    zerolinewidth  = 1
+)
+
+fig_global_zone.update_traces(line_color='#252852', line_width=5)
+
+already = []
+for trace in fig_global_zone['data']:
+    if(already.__contains__(trace['name'])):
+        trace['showlegend'] = False
+    else:
+        already.append(trace['name'])
+
+
+fig_global_zone.show()
+
+
+fig_viral_zone = go.Figure()
+df_viral  = pd.DataFrame.from_dict(viral_dict)
+
+for i in range(len(df)):
+    df_viral.at[i,'max_country'] = fast.find_zone(df_viral.at[i,'max_country'])
+    df_viral.at[i,'min_country'] = fast.find_zone(df_viral.at[i,'min_country'])
+
+
+
+color_max_viral = []
+color_min_viral = []
+for i in range(len(df['max_country'])):
+    if not color_max_viral.__contains__(fast.color_zone(df_viral.at[i,'max_country'])):
+        color_max_viral.append(fast.color_zone(df_viral.at[i,'max_country']))
+    if not color_min_viral.__contains__(fast.color_zone(df_viral.at[i,'min_country'])):
+        color_min_viral.append(fast.color_zone(df_viral.at[i,'min_country']))
+
+fig_s_max = px.scatter(
+    df_viral,
+    x=[i+1 for i in range(15)],
+    y="max_degree",
+    color= "max_country",
+    color_discrete_sequence = color_max_viral,
+)
+
+
+fig_l_max.update_layout(legend_title_text='Trend')
+
+fig_l_max = (px.line(
+        df_viral,
+        x=[i+1 for i in range(15)],
+        y="max_degree"
+    )
+)
+
+fig_s_min = px.scatter(
+    df_viral,
+    x=[i+1 for i in range(15)],
+    y="min_degree",
+    color= "min_country",
+    color_discrete_sequence = color_min_viral,
+
+)
+
+
+
+fig_l_min = (px.line(
+        df_viral,
+        x=[i+1 for i in range(15)],
+        y="min_degree"
+    )
+)
+
+fig_s_mean = px.scatter(
+    df_viral,
+    x=[i+1 for i in range(15)],
+    y="mean_degree",
+    color_discrete_sequence=['#1fa5c0']
+)
+
+fig_s_mean.update_traces(
+    selector=dict(mode='markers'),
+)    
+
+fig_l_mean = (px.line(
+        df_viral,
+        x=[i+1 for i in range(15)],
+        y="mean_degree",
+    )
+)
+
+fig_s_mean['data'][0]['showlegend']=True
+fig_s_mean['data'][0]['name']='Mean'
+
+fig_viral_zone = go.Figure(data = fig_l_min.data + fig_s_min.data  + fig_l_max.data + fig_s_max.data + fig_l_mean.data + fig_s_mean.data)
+
+fig_viral_zone.update_layout(
+    xaxis_title = 'Days',
+    title_font_family="Times New Roman",
+    plot_bgcolor = 'white'
+)
+
+fig_viral_zone.update_traces(
+    marker=dict(
+        size = 13
+    )
+)
+
+fig_viral_zone.update_xaxes(
+    showgrid=False,
+    dtick = 1,
+)
+
+fig_viral_zone.update_yaxes(
+    showgrid=True,
+    dtick = 50,
+    gridwidth=1, 
+    gridcolor= '#e0e0e0',
+    zeroline = True,
+    zerolinecolor = '#e0e0e0',
+    zerolinewidth  = 1
+)
+
+already = []
+for trace in fig_viral_zone['data']:
+    if(already.__contains__(trace['name'])):
+        trace['showlegend'] = False
+    else:
+        already.append(trace['name'])
+
+fig_viral_zone.update_traces(line_color='#252852', line_width=5)
+
+fig_viral_zone.show()
