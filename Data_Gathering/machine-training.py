@@ -2,7 +2,6 @@
 #called spotipy, you can install it with this command:
 #pip install spotipy --upgrade
 #link github for the library: https://github.com/plamere/spotipy
-
 from traceback import print_tb
 import networkx as nx
 import csv
