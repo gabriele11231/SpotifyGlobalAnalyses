@@ -508,3 +508,128 @@ for trace in fig_viral_zone['data']:
 fig_viral_zone.update_traces(line_color='#252852', line_width=5)
 
 fig_viral_zone.show()
+
+fig_line_max_viral = px.bar(
+    df_viral,
+    x = [x+1 for x in range(15)],
+    y = df_viral['max_degree'],
+    color_discrete_sequence=['#998ec3'],
+)
+fig_line_max_viral['data'][0]['showlegend']=True
+fig_line_max_viral['data'][0]['name']='Grado Massimo Viral'
+
+fig_line_max_global = px.bar(
+    df,
+    x = [x+1 for x in range(15)],
+    y = df['max_degree'],
+    color_discrete_sequence=['#f1a340'],
+)
+fig_line_max_global['data'][0]['showlegend']=True
+fig_line_max_global['data'][0]['name']='Grado Massimo Global'
+
+
+
+
+fig_line = go.Figure(fig_line_max_viral.data+fig_line_max_global.data)
+fig_line.update_xaxes(
+    showgrid=False,
+    dtick = 1,
+)
+
+fig_line.update_yaxes(
+    showgrid=True,
+    dtick = 50,
+    gridwidth=1, 
+    gridcolor= '#e0e0e0',
+    zeroline = True,
+    zerolinecolor = '#e0e0e0',
+    zerolinewidth  = 1
+)
+
+fig_line.update_layout(
+    barmode = 'overlay'
+)
+fig_line.show()
+
+fig_line_min_viral = px.bar(
+    df_viral,
+    x = [x+1 for x in range(15)],
+    y = df_viral['min_degree'],
+    color_discrete_sequence=['#998ec3'],
+)
+fig_line_min_viral['data'][0]['showlegend']=True
+fig_line_min_viral['data'][0]['name']='Grado Minimo Viral'
+
+fig_line_min_global = px.bar(
+    df,
+    x = [x+1 for x in range(15)],
+    y = df['min_degree'],
+    color_discrete_sequence=['#f1a340'],
+)
+fig_line_min_global['data'][0]['showlegend']=True
+fig_line_min_global['data'][0]['name']='Grado Minimo Global'
+
+
+fig_line = go.Figure(fig_line_min_viral.data+fig_line_min_global.data)
+fig_line.update_xaxes(
+    showgrid=False,
+    dtick = 1,
+)
+
+fig_line.update_yaxes(
+    showgrid=True,
+    dtick = 50,
+    gridwidth=1, 
+    gridcolor= '#e0e0e0',
+    zeroline = True,
+    zerolinecolor = '#e0e0e0',
+    zerolinewidth  = 1
+)
+
+fig_line.update_layout(
+    barmode = 'overlay'
+)
+fig_line.show()
+
+fig_line_mean_viral = px.bar(
+    df_viral,
+    x = [x+1 for x in range(15)],
+    y = df_viral['mean_degree'],
+    color_discrete_sequence=['#998ec3'],
+)
+
+
+fig_line_mean_viral['data'][0]['showlegend']=True
+fig_line_mean_viral['data'][0]['name']='Grado Medio Viral'
+
+fig_line_mean_global = px.bar(
+    df,
+    x = [x+1 for x in range(15)],
+    y = df['mean_degree'],
+    color_discrete_sequence=['#f1a340'],
+)
+fig_line_mean_global['data'][0]['showlegend']=True
+fig_line_mean_global['data'][0]['name']='Grado Medio Global'
+
+
+fig_line = go.Figure(fig_line_mean_viral.data+fig_line_mean_global.data)
+fig_line.update_xaxes(
+    showgrid=False,
+    dtick = 1,
+)
+
+fig_line.update_yaxes(
+    showgrid=True,
+    dtick = 50,
+    gridwidth=1, 
+    gridcolor= '#e0e0e0',
+    zeroline = True,
+    zerolinecolor = '#e0e0e0',
+    zerolinewidth  = 1
+)
+
+fig_line.update_layout(
+    barmode = 'overlay'
+)
+fig_line.show()
+
