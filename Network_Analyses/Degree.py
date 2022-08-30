@@ -525,7 +525,7 @@ fig_line_max_global = px.bar(
     color_discrete_sequence=['#f1a340'],
 )
 fig_line_max_global['data'][0]['showlegend']=True
-fig_line_max_global['data'][0]['name']='Grado Massimo Global'
+fig_line_max_global['data'][0]['name']='Grado Massimo Top'
 
 
 
@@ -567,7 +567,7 @@ fig_line_min_global = px.bar(
     color_discrete_sequence=['#f1a340'],
 )
 fig_line_min_global['data'][0]['showlegend']=True
-fig_line_min_global['data'][0]['name']='Grado Minimo Global'
+fig_line_min_global['data'][0]['name']='Grado Minimo Top'
 
 
 fig_line = go.Figure(fig_line_min_viral.data+fig_line_min_global.data)
@@ -609,7 +609,7 @@ fig_line_mean_global = px.bar(
     color_discrete_sequence=['#f1a340'],
 )
 fig_line_mean_global['data'][0]['showlegend']=True
-fig_line_mean_global['data'][0]['name']='Grado Medio Global'
+fig_line_mean_global['data'][0]['name']='Grado Medio Top'
 
 
 fig_line = go.Figure(fig_line_mean_viral.data+fig_line_mean_global.data)
