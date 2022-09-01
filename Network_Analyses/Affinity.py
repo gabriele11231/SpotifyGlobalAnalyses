@@ -11,8 +11,11 @@ import json
 from Geographic_zone import fast_geographic_zone
 from PIL import ImageColor
 
+#Number of day for which the data has been collected
+day = 15
+
 affinity = dict()
-for z in range(1, 16):
+for z in range(1, day+1):
 
     data_path = pathlib.Path(__file__).parent.absolute().parent
     graph = pd.read_pickle(data_path.joinpath(f'Dataset/global-pkl/global{z}.pkl'))     
@@ -40,11 +43,11 @@ for z in range(1, 16):
 
 #----CREATE-THE-AFFINITY-GRAPH-TOP----
 graph = nx.Graph()
+graph_min = nx.Graph()
 countries = list()
 mean_affinity = mean_affinity / len(edges)
-print(mean_affinity)
-data_path = pathlib.Path(__file__).parent.absolute().parent
 
+data_path = pathlib.Path(__file__).parent.absolute().parent
 with open(data_path.joinpath('Data_Gathering/global.csv'), 'r') as file:
     reader = csv.DictReader(file)
     for row in reader:
@@ -53,23 +56,26 @@ with open(data_path.joinpath('Data_Gathering/global.csv'), 'r') as file:
 zone = fast_geographic_zone()
 
 for i in range (1,len(countries)) :
-    #rgb = ImageColor.getcolor(zone.color_zone(zone.find_zone(countries[i]["Name"])), "RGB")
-    #delimiter =','
-    #rgb = delimiter.join(str(value) for value in rgb)
     rgb = zone.color_zone(zone.find_zone(countries[i]["Name"]))
     graph.add_node(i,label=countries[i]["Name"],latitudine=float(countries[i]["latitudine"]),longitudine=float(countries[i]["longitudine"]),color=rgb)
+    graph_min.add_node(i,label=countries[i]["Name"],latitudine=float(countries[i]["latitudine"]),longitudine=float(countries[i]["longitudine"]),color=rgb)
+
 
 for x in (edges):
     if x[2] > mean_affinity:
         graph.add_edge(x[0],x[1],weight=x[2])
 
+edges_min = (sorted(edges, key=lambda x:x[2]))[:100]
+for x in(edges_min):
+    graph_min.add_edge(x[0],x[1],weight=(day*50)-x[2])
+
 data_path = pathlib.Path(__file__).parent.absolute().parent
 nx.write_gexf(graph,data_path.joinpath('Network_Analyses/top_affinity.gexf'))
-
+nx.write_gexf(graph_min,data_path.joinpath('Network_Analyses/top_min_affinity.gexf'))
 
 
 affinity = dict()
-for z in range(1, 16):
+for z in range(1, day+1):
 
     data_path = pathlib.Path(__file__).parent.absolute().parent
     graph = pd.read_pickle(data_path.joinpath(f'Dataset/viral-pkl/viral{z}.pkl'))     
@@ -97,11 +103,11 @@ for z in range(1, 16):
 
 #----CREATE-THE-AFFINITY-GRAPH-VIRAL----
 graph = nx.Graph()
+graph_min = nx.Graph()
 countries = list()
 mean_affinity = mean_affinity / len(edges)
-print(mean_affinity)
-data_path = pathlib.Path(__file__).parent.absolute().parent
 
+data_path = pathlib.Path(__file__).parent.absolute().parent
 with open(data_path.joinpath('Data_Gathering/viral.csv'), 'r') as file:
     reader = csv.DictReader(file)
     for row in reader:
@@ -110,16 +116,19 @@ with open(data_path.joinpath('Data_Gathering/viral.csv'), 'r') as file:
 zone = fast_geographic_zone()
 
 for i in range (1,len(countries)) :
-    #rgb = ImageColor.getcolor(zone.color_zone(zone.find_zone(countries[i]["Name"])), "RGB")
-    #delimiter =','
-    #rgb = delimiter.join(str(value) for value in rgb)
     rgb = zone.color_zone(zone.find_zone(countries[i]["Name"]))
     graph.add_node(i,label=countries[i]["Name"],latitudine=float(countries[i]["latitudine"]),longitudine=float(countries[i]["longitudine"]),color=rgb)
+    graph_min.add_node(i,label=countries[i]["Name"],latitudine=float(countries[i]["latitudine"]),longitudine=float(countries[i]["longitudine"]),color=rgb)
 
 for x in (edges):
     if x[2] > mean_affinity:
         graph.add_edge(x[0],x[1],weight=x[2])
 
+edges_min = (sorted(edges, key=lambda x:x[2]))[:100]
+for x in(edges_min):
+    graph_min.add_edge(x[0],x[1],weight=(day*50)-x[2])
+
 data_path = pathlib.Path(__file__).parent.absolute().parent
 nx.write_gexf(graph,data_path.joinpath('Network_Analyses/viral_affinity.gexf'))
+nx.write_gexf(graph_min,data_path.joinpath('Network_Analyses/viral_min_affinity.gexf'))
 
