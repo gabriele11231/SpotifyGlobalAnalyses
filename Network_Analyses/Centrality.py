@@ -1,16 +1,7 @@
-from turtle import color
-import warnings
-warnings.filterwarnings("ignore")
-
 import networkx as nx
-import numpy as np
 import pandas as pd
 import pathlib
 import csv
-import json
-from Geographic_zone import fast_geographic_zone
-from PIL import ImageColor
-
 
 countries = list()
 data_path = pathlib.Path(__file__).parent.absolute().parent
@@ -40,16 +31,7 @@ for z in range(1, day+1):
         for i in eigen_con_pesi:
             eigen[i] = eigen_con_pesi[i] + eigen[i]
 
-eigen = dict(sorted(eigen.items(), key=lambda item: item[1] ,reverse=True))
-j = 0
-
-print("TOP")
-for i in eigen:
-    j = j + 1
-    if (j >= 1 and j <= 5):
-        print("MAX ",countries[i]["Name"]," ",(eigen[i])/(day))
-    if (j >= 68):
-        print("MIN ",countries[i]["Name"]," ",(eigen[i])/(day))
+eigen_top = dict(sorted(eigen.items(), key=lambda item: item[1] ,reverse=True))
 
 
 #----EIGEN-VIRAL----
@@ -69,13 +51,6 @@ for z in range(1, day+1):
         for i in eigen_con_pesi:
             eigen[i] = eigen_con_pesi[i] + eigen[i]
 
-eigen = dict(sorted(eigen.items(), key=lambda item: item[1] ,reverse=True))
-j = 0
+eigen_viral = dict(sorted(eigen.items(), key=lambda item: item[1] ,reverse=True))
 
-print("\nVIRAL")
-for i in eigen:
-    j = j + 1
-    if (j >= 1 and j <= 5):
-        print("MAX ",countries[i]["Name"]," ",(eigen[i])/(day))
-    if (j >= 68):
-        print("MIN ",countries[i]["Name"]," ",(eigen[i])/(day))
+

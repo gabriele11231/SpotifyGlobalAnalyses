@@ -1,4 +1,4 @@
-paese,isrc,uri,genres,danceability,energy,speechiness,acousticness,instrumentalness,valence,tempo
+country,isrc,uri,genres,danceability,energy,speechiness,acousticness,instrumentalness,valence,tempo
 Arabia_Saudita,USSM12200612,spotify:track:4Dvkj6JhhA12EX05fT7y2e,['pop'],0.52,0.731,0.0557,0.342,0.00101,0.662,173.93
 Arabia_Saudita,GBCNR8500002,spotify:track:75FEaRjZTKLhTrFGsfMUXR,"['art pop', 'art rock', 'baroque pop', 'new wave pop', 'permanent wave', 'piano rock', 'singer-songwriter']",0.629,0.547,0.055,0.72,0.00314,0.197,108.375
 Arabia_Saudita,USRC11903813,spotify:track:58HvfVOeJY7lUuCqF0m3ly,"['alt z', 'pop']",0.41,0.611,0.0467,0.0228,0,0.0899,185.727
