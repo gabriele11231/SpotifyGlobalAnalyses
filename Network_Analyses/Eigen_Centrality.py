@@ -93,4 +93,4 @@ fig_viral.update_geos(
     bgcolor='#191414'   
 )
 fig_viral.write_image("eigen_viral.png")
-#fig_viral.show()
+fig_viral.show()
