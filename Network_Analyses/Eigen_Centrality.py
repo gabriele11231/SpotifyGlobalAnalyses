@@ -1,4 +1,3 @@
-from unicodedata import name
 import networkx as nx
 import pandas as pd
 import pathlib
@@ -41,21 +40,29 @@ for z in range(1, day+1):
         for i in eigen_con_pesi:
             eigen[i] = eigen_con_pesi[i] + eigen[i]
 
-eigen_top = dict(sorted(eigen.items(), key=lambda item: item[1] ,reverse=False)).values()
+eigen_top = eigen.values()
 df['eigen_top'] = eigen_top
 fig_top = px.choropleth(
     df, 
     locations='iso', 
     color='eigen_top',
-    projection='natural earth'
-    
+    projection='natural earth',
+    color_continuous_scale=['#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58'] ,
+    scope = 'world',
 )
+
+
 fig_top.update_geos(
     visible=False, 
     resolution=50,
     showcountries=True, 
     countrycolor="White",
-    bgcolor='#191414'   
+    bgcolor='#1c1e21',   
+)
+fig_top.update_layout(
+    font_size = 18,
+    font_color = 'White',
+    paper_bgcolor = "#1c1e21",
 )
 fig_top.show()
 #----EIGEN-VIRAL----
@@ -76,13 +83,16 @@ for z in range(1, day+1):
             eigen[i] = eigen_con_pesi[i] + eigen[i]
 
 
-eigen_viral = dict(sorted(eigen.items(), key=lambda item: item[0] ,reverse=False)).values()
+eigen_viral = eigen.values()
 df['eigen_viral'] = eigen_viral
 fig_viral = px.choropleth(
     df, 
     locations='iso', 
-    color='eigen_viral',#eigenvector == autovettore
-    projection='natural earth'
+    color='eigen_viral',#eigenvector == autovettore,
+    color_continuous_scale=['#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58'] ,
+    projection='natural earth',
+    scope = 'world',
+    labels='Grado Eigen Viral'
     
 )
 fig_viral.update_geos(
@@ -90,7 +100,13 @@ fig_viral.update_geos(
     resolution=50,
     showcountries=True, 
     countrycolor="White",
-    bgcolor='#191414'   
+    bgcolor='#1c1e21',
 )
-fig_viral.write_image("eigen_viral.png")
+fig_viral.update_layout(
+    font_size = 18,
+    font_color = 'White',   
+    paper_bgcolor = "#1c1e21",
+
+)
+fig_viral.write_image("eigen_viral.svg")
 fig_viral.show()
