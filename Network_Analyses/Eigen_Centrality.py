@@ -49,6 +49,7 @@ fig_top = px.choropleth(
     projection='natural earth',
     color_continuous_scale=['#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58'] ,
     scope = 'world',
+    labels= {'eigen_top':'Valore eigenvector centrality Top'}
 )
 
 
@@ -92,7 +93,7 @@ fig_viral = px.choropleth(
     color_continuous_scale=['#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58'] ,
     projection='natural earth',
     scope = 'world',
-    labels='Grado Eigen Viral'
+    labels= {'eigen_viral':'Valore eigenvector centrality Viral'}
     
 )
 fig_viral.update_geos(
@@ -108,5 +109,5 @@ fig_viral.update_layout(
     paper_bgcolor = "#1c1e21",
 
 )
-fig_viral.write_image("eigen_viral.svg")
+
 fig_viral.show()

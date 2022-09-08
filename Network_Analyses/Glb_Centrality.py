@@ -45,45 +45,7 @@ fig_top = px.choropleth(
     projection='natural earth',
     color_continuous_scale=['#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58'] ,
     scope = 'world',
-)
-
-
-fig_top.update_geos(
-    visible=False, 
-    resolution=50,
-    showcountries=True, 
-    countrycolor="White",
-    bgcolor='#1c1e21',   
-)
-fig_top.update_layout(
-    font_size = 18,
-    font_color = 'White',
-    paper_bgcolor = "#1c1e21",
-)
-#fig_top.show()
-
-
-#----VIRAL----
-for x in centrality:
-    centrality[x] = 0
-
-with open(data_path.joinpath(f'Dataset/viral-centrality/viral-centrality-merged.csv'), 'r', encoding="utf-8") as file:
-    reader = csv.DictReader(file)
-    for row in reader:
-        centrality[row['Country']] = centrality[row['Country']] + int(row['Centrality'])
-
-#global-centrality of viral
-centrality_viral = centrality.values()
-df['centrality_viral'] = centrality_viral
-
-
-fig_top = px.choropleth(
-    df, 
-    locations='iso', 
-    color='centrality_viral',
-    projection='natural earth',
-    color_continuous_scale=['#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58'] ,
-    scope = 'world',
+    labels= {'centrality_top':'Global Centrality Top'}
 )
 
 
@@ -100,3 +62,43 @@ fig_top.update_layout(
     paper_bgcolor = "#1c1e21",
 )
 fig_top.show()
+
+
+#----VIRAL----
+for x in centrality:
+    centrality[x] = 0
+
+with open(data_path.joinpath(f'Dataset/viral-centrality/viral-centrality-merged.csv'), 'r', encoding="utf-8") as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        centrality[row['Country']] = centrality[row['Country']] + int(row['Centrality'])
+
+#global-centrality of viral
+centrality_viral = centrality.values()
+df['centrality_viral'] = centrality_viral
+
+
+fig_viral = px.choropleth(
+    df, 
+    locations='iso', 
+    color='centrality_viral',
+    projection='natural earth',
+    color_continuous_scale=['#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58'] ,
+    scope = 'world',
+    labels= {'centrality_viral':'Global Centrality Viral'}
+)
+
+
+fig_viral.update_geos(
+    visible=False, 
+    resolution=50,
+    showcountries=True, 
+    countrycolor="White",
+    bgcolor='#1c1e21',   
+)
+fig_viral.update_layout(
+    font_size = 18,
+    font_color = 'White',
+    paper_bgcolor = "#1c1e21",
+)
+fig_viral.show()
