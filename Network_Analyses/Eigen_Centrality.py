@@ -58,12 +58,14 @@ fig_top.update_geos(
     resolution=50,
     showcountries=True, 
     countrycolor="White",
-    bgcolor='#1c1e21',   
+    bgcolor='#1c1e21',
 )
 fig_top.update_layout(
     font_size = 18,
     font_color = 'White',
     paper_bgcolor = "#1c1e21",
+    width = 2160,
+    height = 1080,
 )
 fig_top.show()
 #----EIGEN-VIRAL----
@@ -107,7 +109,10 @@ fig_viral.update_layout(
     font_size = 18,
     font_color = 'White',   
     paper_bgcolor = "#1c1e21",
-
+    width = 2160,
+    height = 1080,
+    
 )
+
 
 fig_viral.show()

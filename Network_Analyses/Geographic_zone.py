@@ -36,9 +36,9 @@ with open(data_path.joinpath('Data_Gathering/global.csv'), 'r') as file:
             countries_geographic_zone['Medio_Oriente'].append(row['Name'])
 
 #Save result
-with open(data_path.joinpath('Network_Analyses/Countries_geographic_zone.json'), 'w') as outfile:
+'''with open(data_path.joinpath('Network_Analyses/Countries_geographic_zone.json'), 'w') as outfile:
     json.dump(countries_geographic_zone, outfile)
-
+'''
 #Class useful to find quickly the geographic zone given a country
 class fast_geographic_zone:
     def __init__(self):

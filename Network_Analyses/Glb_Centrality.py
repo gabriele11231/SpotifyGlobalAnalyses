@@ -60,7 +60,10 @@ fig_top.update_layout(
     font_size = 18,
     font_color = 'White',
     paper_bgcolor = "#1c1e21",
+    width = 2160,
+    height = 1080,
 )
+
 fig_top.show()
 
 
@@ -100,5 +103,8 @@ fig_viral.update_layout(
     font_size = 18,
     font_color = 'White',
     paper_bgcolor = "#1c1e21",
+    width = 2160,
+    height = 1080,
 )
+
 fig_viral.show()

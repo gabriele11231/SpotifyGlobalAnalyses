@@ -62,7 +62,6 @@ for z in range(1, 16):
     
     data_path = pathlib.Path(__file__).parent.absolute().parent
     grafo = pd.read_pickle(data_path.joinpath(f'Dataset/global-pkl/global{z}.pkl'))
-
     degree = dict(grafo.degree(weight='weight'))
     campione_grado = list(degree.values())
     mean_degree_l.append(np.mean(list(degree.values())))
@@ -149,10 +148,10 @@ fig_l_mean = (px.line(
     )
 )
 
-fig_s_mean['data'][0]['showlegend']=True
-fig_s_mean['data'][0]['name']='Mean'
+fig_s_mean['data'][0]['showlegend']=True  # type: ignore
+fig_s_mean['data'][0]['name']='Media'  # type: ignore
 
-fig_global = go.Figure(data = fig_l_min.data + fig_s_min.data  + fig_l_max.data + fig_s_max.data + fig_l_mean.data + fig_s_mean.data)
+fig_global = go.Figure(data = fig_l_min.data + fig_s_min.data  + fig_l_max.data + fig_s_max.data + fig_l_mean.data + fig_s_mean.data)  # type: ignore
 
 fig_global.update_layout(
     xaxis_title = 'Days',
@@ -162,7 +161,7 @@ fig_global.update_layout(
 
 fig_global.update_traces(
     marker=dict(
-        size = 13
+        size = 15
     )
 )
 
@@ -182,7 +181,12 @@ fig_global.update_yaxes(
     zerolinewidth  = 1
 )
 
-fig_global.update_traces(line_color='#252852', line_width=5)
+fig_global.update_traces(line_color='#252852', line_width=1)
+fig_global.update_layout(
+    width = 2160,
+    height = 1080,
+)
+fig_global.write_image("global.svg")
 
 fig_global.show()
 
@@ -245,10 +249,10 @@ fig_l_mean = (px.line(
     )
 )
 
-fig_s_mean['data'][0]['showlegend']=True
-fig_s_mean['data'][0]['name']='Mean'
+fig_s_mean['data'][0]['showlegend']=True  # type: ignore
+fig_s_mean['data'][0]['name']='Media'  # type: ignore
 
-fig_viral = go.Figure(data = fig_l_min.data + fig_s_min.data  + fig_l_max.data + fig_s_max.data + fig_l_mean.data + fig_s_mean.data)
+fig_viral = go.Figure(data = fig_l_min.data + fig_s_min.data  + fig_l_max.data + fig_s_max.data + fig_l_mean.data + fig_s_mean.data)  # type: ignore
 
 fig_viral.update_layout(
     xaxis_title = 'Days',
@@ -258,7 +262,7 @@ fig_viral.update_layout(
 
 fig_viral.update_traces(
     marker=dict(
-        size = 13
+        size = 15
     )
 )
 
@@ -277,7 +281,12 @@ fig_viral.update_yaxes(
     zerolinewidth  = 1
 )
 
-fig_viral.update_traces(line_color='#252852', line_width=5)
+fig_viral.update_traces(line_color='#252852', line_width=1)
+fig_viral.update_layout(
+    width = 2160,
+    height = 1080,
+)
+fig_viral.write_image("viral.svg")
 
 fig_viral.show()
 
@@ -287,17 +296,24 @@ fig_viral.show()
 fast = fast_geographic_zone()
 fig_global_zone = go.Figure()
 
+
+print(df['max_country'])
+
 for i in range(len(df)):
     df.at[i,'max_country'] = fast.find_zone(df.at[i,'max_country'])
     df.at[i,'min_country'] = fast.find_zone(df.at[i,'min_country'])
 
+
+print(df['max_country'])
+
 color_max = []
 color_min = []
-for i in range(len(df['max_country'])):
+for i in range(len(df)):
     if not color_max.__contains__(fast.color_zone(df.at[i,'max_country'])):
         color_max.append(fast.color_zone(df.at[i,'max_country']))
     if not color_min.__contains__(fast.color_zone(df.at[i,'min_country'])):
         color_min.append(fast.color_zone(df.at[i,'min_country']))
+
 
 fig_s_max = px.scatter(
     df,
@@ -349,10 +365,10 @@ fig_l_mean = (px.line(
     )
 )
 
-fig_s_mean['data'][0]['showlegend']=True
-fig_s_mean['data'][0]['name']='Mean'
+fig_s_mean['data'][0]['showlegend']=True  # type: ignore
+fig_s_mean['data'][0]['name']='Media'  # type: ignore
 
-fig_global_zone = go.Figure(data = fig_l_min.data + fig_s_min.data  + fig_l_max.data + fig_s_max.data + fig_l_mean.data + fig_s_mean.data)
+fig_global_zone = go.Figure(data = fig_l_min.data + fig_s_min.data  + fig_l_max.data + fig_s_max.data + fig_l_mean.data + fig_s_mean.data)  # type: ignore
 
 fig_global_zone.update_layout(
     xaxis_title = 'Days',
@@ -362,7 +378,7 @@ fig_global_zone.update_layout(
 
 fig_global_zone.update_traces(
     marker=dict(
-        size = 13
+        size = 15
     )
 )
 
@@ -382,15 +398,20 @@ fig_global_zone.update_yaxes(
     zerolinewidth  = 1
 )
 
-fig_global_zone.update_traces(line_color='#252852', line_width=5)
+fig_global_zone.update_traces(line_color='#252852', line_width=1)
 
 already = []
 for trace in fig_global_zone['data']:
-    if(already.__contains__(trace['name'])):
-        trace['showlegend'] = False
+    if(already.__contains__(trace['name'])):  # type: ignore
+        trace['showlegend'] = False  # type: ignore
     else:
-        already.append(trace['name'])
+        already.append(trace['name'])  # type: ignore
 
+fig_global_zone.update_layout(
+    width = 2160,
+    height = 1080,
+)
+fig_global_zone.write_image("global_zone.svg")
 
 fig_global_zone.show()
 
@@ -466,11 +487,10 @@ fig_l_mean = (px.line(
     )
 )
 
-fig_s_mean['data'][0]['showlegend']=True
-fig_s_mean['data'][0]['name']='Mean'
+fig_s_mean['data'][0]['showlegend']=True  # type: ignore
+fig_s_mean['data'][0]['name']='Media'  # type: ignore
 
-fig_viral_zone = go.Figure(data = fig_l_min.data + fig_s_min.data  + fig_l_max.data + fig_s_max.data + fig_l_mean.data + fig_s_mean.data)
-
+fig_viral_zone = go.Figure(data = fig_l_min.data + fig_s_min.data  + fig_l_max.data + fig_s_max.data + fig_l_mean.data + fig_s_mean.data)  # type: ignore
 fig_viral_zone.update_layout(
     xaxis_title = 'Days',
     title_font_family="Times New Roman",
@@ -479,7 +499,7 @@ fig_viral_zone.update_layout(
 
 fig_viral_zone.update_traces(
     marker=dict(
-        size = 13
+        size = 15
     )
 )
 
@@ -500,12 +520,16 @@ fig_viral_zone.update_yaxes(
 
 already = []
 for trace in fig_viral_zone['data']:
-    if(already.__contains__(trace['name'])):
-        trace['showlegend'] = False
+    if(already.__contains__(trace['name'])):  # type: ignore
+        trace['showlegend'] = False  # type: ignore
     else:
-        already.append(trace['name'])
-
-fig_viral_zone.update_traces(line_color='#252852', line_width=5)
+        already.append(trace['name'])  # type: ignore
+fig_viral_zone.update_layout(
+    width = 2160,
+    height = 1080,
+)
+fig_viral_zone.update_traces(line_color='#252852', line_width=1)
+fig_viral_zone.write_image("viral_zone.svg")
 
 fig_viral_zone.show()
 
@@ -515,8 +539,8 @@ fig_line_max_viral = px.bar(
     y = df_viral['max_degree'],
     color_discrete_sequence=['#998ec3'],
 )
-fig_line_max_viral['data'][0]['showlegend']=True
-fig_line_max_viral['data'][0]['name']='Grado Massimo Viral'
+fig_line_max_viral['data'][0]['showlegend']=True  # type: ignore
+fig_line_max_viral['data'][0]['name']='Grado Massimo Viral'  # type: ignore
 
 fig_line_max_global = px.bar(
     df,
@@ -524,13 +548,13 @@ fig_line_max_global = px.bar(
     y = df['max_degree'],
     color_discrete_sequence=['#f1a340'],
 )
-fig_line_max_global['data'][0]['showlegend']=True
-fig_line_max_global['data'][0]['name']='Grado Massimo Top'
+fig_line_max_global['data'][0]['showlegend']=True  # type: ignore
+fig_line_max_global['data'][0]['name']='Grado Massimo Top'  # type: ignore
 
 
 
 
-fig_line = go.Figure(fig_line_max_viral.data+fig_line_max_global.data)
+fig_line = go.Figure(fig_line_max_viral.data+fig_line_max_global.data)  # type: ignore
 fig_line.update_xaxes(
     showgrid=False,
     dtick = 1,
@@ -557,8 +581,8 @@ fig_line_min_viral = px.bar(
     y = df_viral['min_degree'],
     color_discrete_sequence=['#998ec3'],
 )
-fig_line_min_viral['data'][0]['showlegend']=True
-fig_line_min_viral['data'][0]['name']='Grado Minimo Viral'
+fig_line_min_viral['data'][0]['showlegend']=True  # type: ignore
+fig_line_min_viral['data'][0]['name']='Grado Minimo Viral'  # type: ignore
 
 fig_line_min_global = px.bar(
     df,
@@ -566,11 +590,11 @@ fig_line_min_global = px.bar(
     y = df['min_degree'],
     color_discrete_sequence=['#f1a340'],
 )
-fig_line_min_global['data'][0]['showlegend']=True
-fig_line_min_global['data'][0]['name']='Grado Minimo Top'
+fig_line_min_global['data'][0]['showlegend']=True  # type: ignore
+fig_line_min_global['data'][0]['name']='Grado Minimo Top'  # type: ignore
 
 
-fig_line = go.Figure(fig_line_min_viral.data+fig_line_min_global.data)
+fig_line = go.Figure(fig_line_min_viral.data+fig_line_min_global.data)  # type: ignore
 fig_line.update_xaxes(
     showgrid=False,
     dtick = 1,
@@ -599,20 +623,20 @@ fig_line_mean_viral = px.bar(
 )
 
 
-fig_line_mean_viral['data'][0]['showlegend']=True
-fig_line_mean_viral['data'][0]['name']='Grado Medio Viral'
+fig_line_mean_viral['data'][0]['showlegend']=True  # type: ignore
+fig_line_mean_viral['data'][0]['name']='Grado Medio Viral'  # type: ignore
 
 fig_line_mean_global = px.bar(
     df,
     x = [x+1 for x in range(15)],
     y = df['mean_degree'],
     color_discrete_sequence=['#f1a340'],
-)
-fig_line_mean_global['data'][0]['showlegend']=True
-fig_line_mean_global['data'][0]['name']='Grado Medio Top'
+) 
+fig_line_mean_global['data'][0]['showlegend']=True  # type: ignore
+fig_line_mean_global['data'][0]['name']='Grado Medio Top'  # type: ignore
 
 
-fig_line = go.Figure(fig_line_mean_viral.data+fig_line_mean_global.data)
+fig_line = go.Figure(fig_line_mean_viral.data+fig_line_mean_global.data)  # type: ignore
 fig_line.update_xaxes(
     showgrid=False,
     dtick = 1,

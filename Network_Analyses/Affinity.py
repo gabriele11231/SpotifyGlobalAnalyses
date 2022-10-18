@@ -1,4 +1,3 @@
-from turtle import color
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -116,6 +115,7 @@ with open(data_path.joinpath('Data_Gathering/viral.csv'), 'r') as file:
 zone = fast_geographic_zone()
 
 for i in range (1,len(countries)) :
+    print(countries[i]["Name"])
     rgb = zone.color_zone(zone.find_zone(countries[i]["Name"]))
     graph.add_node(i,label=countries[i]["Name"],latitudine=float(countries[i]["latitudine"]),longitudine=float(countries[i]["longitudine"]),color=rgb)
     graph_min.add_node(i,label=countries[i]["Name"],latitudine=float(countries[i]["latitudine"]),longitudine=float(countries[i]["longitudine"]),color=rgb)

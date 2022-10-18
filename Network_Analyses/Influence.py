@@ -64,5 +64,4 @@ figure.update_layout(
     width = 2160,
     height = 1080,
 )
-figure.write_image("Influence.svg")
 figure.show()

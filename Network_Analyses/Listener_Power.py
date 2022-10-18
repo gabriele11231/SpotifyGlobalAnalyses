@@ -67,6 +67,10 @@ fig = px.bar(
     x=df_lang.index,
     y= df_lang.columns,
     color=df_lang.index,
+    labels={
+        "index": "Contries",
+        "value": "Centrality",
+    },
     color_discrete_sequence= ['#8aa023','#5eeed8','#2b9ce1','#ed9500','#c77de9','#d7edb5','#1421a1','#e05a77','#c977c5','#bcc1d4','#cd39d8','#5562d9','#e87eb2','#ab2072','#e1b752'],
 )
 fig.update_layout( 
