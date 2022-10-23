@@ -1,67 +1,52 @@
-import time
-import numpy
+import matplotlib.pyplot as plt
 import pandas as pd
 import pathlib
-import plotly.graph_objects as go
+import plotly.express as px
 
-data_path = pathlib.Path(__file__).parent.absolute().parent
-current_year = time.gmtime().tm_year 
+def main():
+    data = data_gathering()
 
-influence = list(dict())
-for z in range(1,16):
-    entry_path = data_path.joinpath(f'Dataset/10-viral/10-viral{z}.csv')
-    with open(entry_path,newline='',encoding='utf-16') as file:
-        entry = pd.read_csv(file)
-        temp_dict = dict()
-        for row in entry['pubblicazione']:
-            year_of_release = current_year - int(row.split('-')[0])
-            value = 0
-            if temp_dict.get(year_of_release) != None:
-                value = temp_dict.get(year_of_release)
-            temp_dict[year_of_release] = value + 1  # type: ignore
-        influence.append(temp_dict)
-        del temp_dict
-     
+    create_treemap_plotly(data)
 
-df = pd.DataFrame(influence)
-df = df.reindex(sorted(df.columns), axis=1)
+def data_gathering():
+    data_path = pathlib.Path(__file__).parent.absolute().parent
+
+    df = pd.DataFrame()
+    for z in range(1,16):
+        entry_path = data_path.joinpath(f'Dataset/10-viral/10-viral{z}.csv')
+        with open(entry_path,newline='',encoding='utf-16') as file:
+            df = pd.concat([df,pd.read_csv(file)],ignore_index=True)
 
 
+    for i in range(len(df['pubblicazione'])):
+        df['pubblicazione'].at[i] = df['pubblicazione'].at[i].split("-")[0]
 
-figure = go.Figure()
-for i in range(len(df.index)) :
-    size = list()
-    for element in df.iloc[i]:
-        if numpy.isnan(element) :
-            size.append(0)
-        else:
-            size.append(element)
-    print(size)
-    figure.add_trace(
-        go.Scatter(
-            x = [i+1 for x in range(len(df.iloc[i]))],
-            y = df.columns.to_list(),
-            mode='markers',
-            marker_size = [element*5 for element in size],
-            showlegend= False,
-        )
+
+    return df
+
+def create_treemap_plotly(data):
+
+    fig = px.treemap(
+        data,
+        path=['titolo'],
+        values = [1 for i in range(150)],
     )
 
-figure.update_xaxes(
-    title = dict(
-        text = 'Settembre',
-    ),
-    dtick = 1,
-    tick0 = -1
-)
-figure.update_yaxes(
-    title = dict(
-        text = "anni dall'uscita",
-    ),
-    tick0 = -1
-)   
-figure.update_layout(
-    width = 2160,
-    height = 1080,
-)
-figure.show()
+    fig.data[0]['labels'] = create_label(data.drop_duplicates().reset_index())
+
+    fig.update_layout(
+        treemapcolorway = ['#67001f','#b2182b','#d6604d','#f4a582','#fddbc7','#f7f7f7','#d1e5f0','#92c5de','#4393c3','#2166ac','#053061',], #defines the colors in the treemap
+        margin = dict(t=50, l=25, r=25, b=25),
+        width = 2160,
+        height = 1080,    
+    )
+    fig.show()
+    fig.write_image("Influence.jpg")
+
+def create_label(data):
+    return [row[4] + "<br>" + row[5] + " - " + row[6] for row in data.itertuples()]
+    
+    
+
+
+main()
