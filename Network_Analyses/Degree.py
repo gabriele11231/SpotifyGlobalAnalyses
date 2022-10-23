@@ -5,43 +5,30 @@ from pathlib import Path
 import plotly.graph_objects as go
 import plotly.express as px
 import pathlib
-
-from traitlets import Integer
 from Geographic_zone import fast_geographic_zone
 
-def scatterPlot(df):
-    fig = go.Figure()
+def singleScatter(df,degree,colors):
 
-    fig_s_max = px.scatter(
+    fig_s = px.scatter(
         df,
         x=[i+1 for i in range(15)],
-        y="max_degree",
-        color= "max_country",
-        color_discrete_sequence = ['#e66100','#5d3a9b','#43a28e','#b1606a','#ccac51','#4933d4','#df454f','#960bd5','#178e18','#d1802f','#aabfc2','#a24af3','#5b8110','#1552dd','#a5a1e8']
+        y= degree + "_degree",
+
+        color = degree + "_country",
+        color_discrete_sequence = colors
     )
 
-    fig_l_max = (px.line(
+    fig_l = (px.line(
             df,
             x=[i+1 for i in range(15)],
-            y="max_degree"
+            y= degree  + "_degree"
         )
     )
 
-    fig_s_min = px.scatter(
-        df,
-        x=[i+1 for i in range(15)],
-        y="min_degree",
-        color= "min_country",
-        color_discrete_sequence = ['#8aa023','#5eeed8','#2b9ce1','#ed9500','#c77de9','#d7edb5','#1421a1','#e05a77','#c977c5','#bcc1d4','#cd39d8','#5562d9','#e87eb2','#ab2072','#e1b752']
-    )
+        
+    return go.Figure(data = fig_l.data + fig_s.data)
 
-    fig_l_min = (px.line(
-            df,
-            x=[i+1 for i in range(15)],
-            y="min_degree"
-        )
-    )
-
+def singleScatterMean(df):
     fig_s_mean = px.scatter(
         df,
         x=[i+1 for i in range(15)],
@@ -62,8 +49,19 @@ def scatterPlot(df):
 
     fig_s_mean['data'][0]['showlegend']=True  # type: ignore
     fig_s_mean['data'][0]['name']='Media'  # type: ignore
+    return go.Figure(fig_s_mean. data + fig_l_mean.data)
 
-    fig = go.Figure(data = fig_l_min.data + fig_s_min.data  + fig_l_max.data + fig_s_max.data + fig_l_mean.data + fig_s_mean.data)  # type: ignore
+
+
+def scatterPlot(df):
+
+
+    fig_max = singleScatter(df,'max',['#e66100','#5d3a9b','#43a28e','#b1606a','#ccac51','#4933d4','#df454f','#960bd5','#178e18','#d1802f','#aabfc2','#a24af3','#5b8110','#1552dd','#a5a1e8'])
+    fig_min = singleScatter(df,'min',['#8aa023','#5eeed8','#2b9ce1','#ed9500','#c77de9','#d7edb5','#1421a1','#e05a77','#c977c5','#bcc1d4','#cd39d8','#5562d9','#e87eb2','#ab2072','#e1b752'])
+
+    fig_mean = singleScatterMean(df)
+
+    fig = go.Figure(data = fig_min.data  + fig_max.data + fig_mean.data)  # type: ignore
 
     fig.update_layout(
         xaxis_title = 'Days',
@@ -120,61 +118,12 @@ def scatterPlotZone(df):
         if not color_min.__contains__(fast.color_zone(df.at[i,'min_country'])):
             color_min.append(fast.color_zone(df.at[i,'min_country']))
 
-
-    fig_s_max = px.scatter(
-        df,
-        x=[i+1 for i in range(15)],
-        y="max_degree",
-        color= "max_country",
-        color_discrete_sequence = color_max,
-    )
-
-    fig_l_max = (px.line(
-            df,
-            x=[i+1 for i in range(15)],
-            y="max_degree"
-        )
-    )
-
-    fig_s_min = px.scatter(
-        df,
-        x=[i+1 for i in range(15)],
-        y="min_degree",
-        color= "min_country",
-        color_discrete_sequence = color_min
-    )
-
-    fig_l_min = (px.line(
-            df,
-            x=[i+1 for i in range(15)],
-            y="min_degree"
-        )
-    )
+    fig_max = singleScatter(df,'max',color_max)
+    fig_min = singleScatter(df,'min',color_min)
+    fig_mean =singleScatterMean(df)
 
 
-
-    fig_s_mean = px.scatter(
-        df,
-        x=[i+1 for i in range(15)],
-        y="mean_degree",
-        color_discrete_sequence=['#1fa5c0']
-    )
-
-    fig_s_mean.update_traces(
-        selector=dict(mode='markers'),
-    )    
-
-    fig_l_mean = (px.line(
-            df,
-            x=[i+1 for i in range(15)],
-            y="mean_degree",
-        )
-    )
-
-    fig_s_mean['data'][0]['showlegend']=True  # type: ignore
-    fig_s_mean['data'][0]['name']='Media'  # type: ignore
-
-    fig_zone = go.Figure(data = fig_l_min.data + fig_s_min.data  + fig_l_max.data + fig_s_max.data + fig_l_mean.data + fig_s_mean.data)  # type: ignore
+    fig_zone = go.Figure(data = fig_min.data+ fig_max.data + fig_mean.data )  # type: ignore
 
     fig_zone.update_layout(
         xaxis_title = 'Days',
@@ -272,7 +221,7 @@ def createDataFrame(name):
     for z in range(1, 16):
 
         data_path = pathlib.Path(__file__).parent.absolute().parent
-        grafo = pd.read_pickle(data_path.joinpath('Dataset/'+ name +'-pkl/viral' + str(z) + '.pkl'))
+        grafo = pd.read_pickle(data_path.joinpath('Dataset/'+ name +'-pkl/'+ name + str(z) + '.pkl'))
 
         degree = dict(grafo.degree(weight='weight'))
         campione_grado = list(degree.values())
