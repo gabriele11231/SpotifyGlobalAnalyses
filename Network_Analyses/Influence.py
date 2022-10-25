@@ -4,18 +4,21 @@ import pathlib
 import plotly.express as px
 
 def main():
-    data = data_gathering()
+    data = data_gathering("global")
+    data_viral = data_gathering("viral")
+    create_treemap_plotly(data).show()
+    create_treemap_plotly(data_viral).show()
 
-    create_treemap_plotly(data)
 
-def data_gathering():
+
+def data_gathering(name):
     data_path = pathlib.Path(__file__).parent.absolute().parent
 
     df = pd.DataFrame()
     for z in range(1,16):
-        entry_path = data_path.joinpath(f'Dataset/10-viral/10-viral{z}.csv')
+        entry_path = data_path.joinpath('Dataset/10-'+name+'/10-' + name + str(z)  +'.csv')
         with open(entry_path,newline='',encoding='utf-16') as file:
-            df = pd.concat([df,pd.read_csv(file)],ignore_index=True)
+            df = pd.concat([df,pd.read_csv(file).iloc[:5]],ignore_index=True)
 
 
     for i in range(len(df['pubblicazione'])):
@@ -25,14 +28,15 @@ def data_gathering():
     return df
 
 def create_treemap_plotly(data):
-
+    values = data.groupby('titolo')['isrc'].count().to_dict()
+    data = data.drop_duplicates(subset = 'titolo')
     fig = px.treemap(
         data,
         path=['titolo'],
-        values = [1 for i in range(150)],
+        values = [values.get(title) for title in data['titolo']],
     )
 
-    fig.data[0]['labels'] = create_label(data.drop_duplicates().reset_index())
+    fig.data[0]['labels'] = create_label(data.sort_values(by='titolo'))
 
     fig.update_layout(
         treemapcolorway = ['#67001f','#b2182b','#d6604d','#f4a582','#fddbc7','#f7f7f7','#d1e5f0','#92c5de','#4393c3','#2166ac','#053061',], #defines the colors in the treemap
@@ -40,11 +44,10 @@ def create_treemap_plotly(data):
         width = 2160,
         height = 1080,    
     )
-    fig.show()
-    fig.write_image("Influence.jpg")
+    return fig
 
 def create_label(data):
-    return [row[4] + "<br>" + row[5] + " - " + row[6] for row in data.itertuples()]
+    return [row[3] + "<br>" + row[4] + " - " + row[5] for row in data.itertuples()]
     
     
 
